@@ -1,0 +1,313 @@
+/* Integration-example chrome — WORKFLOW agent. Scoped under .zk-wfx*.
+   This styling exists only for the demo container; at integration the LEAD's
+   shell + Agent Action Brief provide the surrounding UI. */
+
+.zk-wfx {
+  --zk-bg: #f5f7fc;
+  --zk-surface: #fff;
+  --zk-border: #e3e8f2;
+  --zk-text: #15121f;
+  --zk-text2: #3e4a63;
+  --zk-muted: #5f6577;
+  --zk-accent: #1f5fd9;
+  --zk-ok-bg: #e3f6ec;
+  --zk-ok-text: #146c43;
+  --zk-warn-bg: #fdf3d7;
+  --zk-warn-text: #7a4e00;
+  --zk-bad-bg: #fde8e4;
+  --zk-bad-text: #a3261a;
+  font-family: "Manrope", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--zk-text);
+  background: var(--zk-surface);
+  border: 1px solid var(--zk-border);
+  border-radius: 18px;
+  padding: 20px;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(21, 18, 31, 0.06);
+}
+
+.zk-wfx__header {
+  border-bottom: 1px solid var(--zk-border);
+  padding-bottom: 12px;
+}
+
+.zk-wfx__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.zk-wfx__mock-note {
+  margin: 4px 0 10px;
+  font-size: 0.75rem;
+  color: var(--zk-muted);
+}
+
+.zk-wfx__request-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.zk-wfx__avatar {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.zk-wfx__agent-name {
+  font-weight: 800;
+  color: var(--zk-text);
+}
+
+.zk-wfx__agent-level {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--zk-accent);
+  background: #eaf2fe;
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.zk-wfx__issue {
+  color: var(--zk-muted);
+  overflow-wrap: anywhere;
+}
+
+.zk-wfx__banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.zk-wfx__banner--ok {
+  background: var(--zk-ok-bg);
+  color: var(--zk-ok-text);
+}
+
+.zk-wfx__banner--bad {
+  background: var(--zk-bad-bg);
+  color: var(--zk-bad-text);
+}
+
+.zk-wfx__banner--warn {
+  background: var(--zk-warn-bg);
+  color: var(--zk-warn-text);
+}
+
+.zk-wfx__banner--info {
+  background: #eaf2fe;
+  color: #1d4fb8;
+}
+
+.zk-wfx__banner-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.zk-wfx__banner-dot--ok {
+  background: #17a05a;
+}
+
+.zk-wfx__banner-dot--bad {
+  background: #c0362b;
+}
+
+.zk-wfx__banner-dot--warn {
+  background: #d99206;
+}
+
+.zk-wfx__banner-dot--info {
+  background: var(--zk-accent);
+}
+
+.zk-wfx__plan {
+  border: 1px solid var(--zk-border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: var(--zk-bg);
+}
+
+.zk-wfx__plan-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--zk-muted);
+}
+
+.zk-wfx__version {
+  background: var(--zk-accent);
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+}
+
+.zk-wfx__revised {
+  background: #fdf3d7;
+  color: #7a4e00;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+}
+
+.zk-wfx__plan-summary {
+  margin: 0 0 10px;
+  font-size: 0.88rem;
+  color: var(--zk-text2);
+}
+
+.zk-wfx__steps {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zk-wfx__step {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--zk-text);
+}
+
+.zk-wfx__step--changed {
+  list-style-position: inside;
+  border-left: 3px solid var(--zk-accent);
+  padding-left: 10px;
+}
+
+.zk-wfx__step-tag {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--zk-accent);
+  background: #eaf2fe;
+  border-radius: 999px;
+  padding: 1px 8px;
+  vertical-align: middle;
+}
+
+.zk-wfx__versions {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: var(--zk-text2);
+}
+
+.zk-wfx__versions summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--zk-accent);
+  min-height: 24px;
+}
+
+.zk-wfx__versions ol {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.zk-wfx__question {
+  border: 1px solid #eddbab;
+  background: var(--zk-warn-bg);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.zk-wfx__question-title {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--zk-warn-text);
+}
+
+.zk-wfx__question-body {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--zk-text);
+  line-height: 1.5;
+}
+
+.zk-wfx__question-context {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: var(--zk-text2);
+  line-height: 1.5;
+}
+
+.zk-wfx__tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--zk-border);
+  padding-top: 12px;
+  font-size: 0.78rem;
+  color: var(--zk-muted);
+}
+
+.zk-wfx__tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.zk-wfx__tool input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--zk-accent);
+}
+
+.zk-wfx__reset {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 10px;
+  border: 1px solid var(--zk-border);
+  background: var(--zk-surface);
+  color: var(--zk-text2);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.zk-wfx__reset:hover {
+  border-color: var(--zk-accent);
+  color: var(--zk-accent);
+}
+
+.zk-wfx__reset:focus-visible {
+  outline: 2px solid var(--zk-accent);
+  outline-offset: 2px;
+}
