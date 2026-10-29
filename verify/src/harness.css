@@ -1,0 +1,43 @@
+/* Harness page chrome only — component styling comes from the component itself. */
+body {
+  margin: 0;
+  background: var(--bg, #f4f5fa);
+  color: var(--text, #101223);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+.harness {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+}
+
+.harness__title {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.harness__sub {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--text-subtle, #8a90a8);
+}
+
+.harness__case {
+  margin-top: 28px;
+}
+
+.harness__caption {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-subtle, #8a90a8);
+  margin: 0 0 10px;
+}
+
+.harness__frame {
+  max-width: 640px;
+}

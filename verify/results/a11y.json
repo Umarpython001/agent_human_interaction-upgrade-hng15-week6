@@ -1,0 +1,180 @@
+{
+  "axe": [
+    {
+      "case": "pending",
+      "violations": []
+    },
+    {
+      "case": "revising",
+      "violations": []
+    },
+    {
+      "case": "revised",
+      "violations": []
+    },
+    {
+      "case": "approved",
+      "violations": []
+    },
+    {
+      "case": "evidence-kinds",
+      "violations": []
+    },
+    {
+      "case": "edge",
+      "violations": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "axe pending",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "axe revising",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "axe revised",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "axe approved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "axe evidence-kinds",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "axe edge",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyboard: summary reachable with Tab",
+      "ok": true,
+      "detail": "1 tabs"
+    },
+    {
+      "name": "keyboard: Enter opens superseded history",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyboard: Enter closes it again",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clamp: toggle renders for overflowing text",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clamp: aria-expanded starts false",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clamp: Show more expands the text",
+      "ok": true,
+      "detail": "144px → 312px"
+    },
+    {
+      "name": "clamp: aria-expanded flips to true",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clamp: no toggle for short text (pending case)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "status pill announces 'Waiting on you'",
+      "ok": true,
+      "detail": "● Waiting on you v1"
+    },
+    {
+      "name": "working phase announces 'Agent revising plan'",
+      "ok": true,
+      "detail": "● Agent revising plan v1"
+    },
+    {
+      "name": "brief-version text is 'v2 · revised'",
+      "ok": true,
+      "detail": "v2 · revised"
+    },
+    {
+      "name": "brief-revised-badge present on revised",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "brief-revised-badge absent on v1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "data-version=2 on revised card",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "testid brief-plan present in pending case",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "testid brief-risks present in pending case",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "testid brief-estimate present in pending case",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "testid brief-evidence present in pending case",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "testid brief-uncertainties present in pending case",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SLA chip shown while open (pending)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SLA chip shown while changes_requested",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SLA chip hidden when approved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "confidence chip rendered from data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "reduced-motion: chevron transition ~0",
+      "ok": true,
+      "detail": "0.00001s"
+    }
+  ]
+}
