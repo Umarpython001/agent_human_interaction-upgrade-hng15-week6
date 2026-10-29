@@ -1,0 +1,57 @@
+/* Design tokens extracted from the Ziki screenshots (ziki.dev).
+   Lead agent owns this file — do not fork a second token set. */
+:root {
+  /* Surfaces */
+  --bg: #f4f5fa;
+  --surface: #ffffff;
+  --border: #e7e9f2;
+  --border-strong: #d8dceb;
+
+  /* Text */
+  --text: #101223;
+  --text-muted: #5a6079;
+  --text-subtle: #8a90a8;
+
+  /* Brand blue */
+  --blue: #2563eb;
+  --blue-hover: #1d4fd8;
+  --blue-soft: #eaf0ff;
+
+  /* Status colours (pill backgrounds are soft tints, text is a deep shade) */
+  --amber: #f59e0b;
+  --amber-soft: #fdf3dc;
+  --amber-text: #8a6116;
+
+  --green: #16a34a;
+  --green-soft: #e7f7ec;
+  --green-text: #147a3b;
+
+  --red: #dc2626;
+  --red-soft: #fdecec;
+  --red-text: #9f1d1d;
+
+  /* Ranking/nav accents */
+  --navy: #101a33;
+
+  /* Radii */
+  --radius-card: 16px;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgba(16, 26, 51, 0.04), 0 8px 24px rgba(16, 26, 51, 0.05);
+
+  /* Type */
+  --font: "Aeonik", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+
+  /* --zk-* aliases (canonical names requested by UI agent; same values). */
+  --zk-bg: var(--bg);
+  --zk-surface: var(--surface);
+  --zk-border: var(--border);
+  --zk-tint: var(--blue-soft);
+  --zk-text: var(--text);
+  --zk-text2: var(--text-muted);
+  --zk-muted: var(--text-subtle);
+  --zk-accent: var(--blue);
+}
