@@ -1,0 +1,16 @@
+{
+  "name": "ziki-qa-harness",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Independent QA harness: end-to-end journey + accessibility checks for the Clarification Loop demo. Owned by the QA agent.",
+  "scripts": {
+    "smoke": "node scripts/smoke.mjs",
+    "a11y": "node scripts/a11y.mjs",
+    "verify": "node scripts/smoke.mjs && node scripts/a11y.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "playwright": "^1.49.0"
+  }
+}
