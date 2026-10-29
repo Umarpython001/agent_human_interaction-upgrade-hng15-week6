@@ -1,0 +1,793 @@
+/* ==================================================================
+ * ActionBriefCard — file-scoped styles (UI agent)
+ * Prefix: .zk-brief — no global selectors outside the component root.
+ *
+ * Every value comes from LEAD's `src/styles/tokens.css` (no forked token
+ * set). Metrics mirror `global.css` conventions (card padding 22/24,
+ * kicker 11px uppercase, pill radius, soft-tint status colours).
+ * ================================================================== */
+
+.zk-brief {
+  box-sizing: border-box;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14.5px;
+  line-height: 1.55;
+  padding: 22px 24px;
+}
+
+.zk-brief *,
+.zk-brief *::before,
+.zk-brief *::after {
+  box-sizing: border-box;
+}
+
+.zk-brief :where(h1, h2, h3, h4, h5, h6, p, ul, ol) {
+  margin: 0;
+}
+
+.zk-brief :where(a) {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.zk-brief :where(a):hover {
+  text-decoration: underline;
+}
+
+.zk-brief :where(a, button, summary):focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------------------------- header ---------------------------- */
+
+.zk-brief__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+}
+
+.zk-brief__headings {
+  min-width: 0;
+}
+
+.zk-brief__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.zk-brief__title {
+  font-size: 16.5px;
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  line-height: 1.35;
+}
+
+.zk-brief__statusline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zk-brief__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.zk-brief__dot {
+  font-size: 9px;
+  line-height: 1;
+}
+
+.zk-brief__status.is-amber {
+  background: var(--amber-soft);
+  color: var(--amber-text);
+}
+.zk-brief__status.is-blue {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+.zk-brief__status.is-green {
+  background: var(--green-soft);
+  color: var(--green-text);
+}
+.zk-brief__status.is-red {
+  background: var(--red-soft);
+  color: var(--red-text);
+}
+.zk-brief__status.is-neutral {
+  background: var(--bg);
+  color: var(--text-muted);
+}
+
+.zk-brief__version {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.zk-brief__revised {
+  color: var(--blue);
+  font-weight: 800;
+}
+
+/* ------------------- SLA + confidence facts --------------------- */
+
+.zk-brief__facts-wrap {
+  margin-top: 14px;
+}
+
+.zk-brief__facts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zk-brief__fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 5px 11px;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.zk-brief__fact svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.zk-brief__fact.is-deadline {
+  background: var(--amber-soft);
+  border-color: transparent;
+  color: var(--amber-text);
+}
+
+.zk-brief__fineprint {
+  margin-top: 7px;
+  color: var(--text-muted);
+  font-size: 12.4px;
+  line-height: 1.5;
+}
+
+/* --------------------------- agent row -------------------------- */
+
+.zk-brief__agent-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.zk-brief__avatar {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.zk-brief__identity {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.zk-brief__agent-name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.zk-brief__agent-sub {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.zk-brief__estimate {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* -------------------------- issue block ------------------------- */
+
+.zk-brief__issue-block {
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-top: 16px;
+}
+
+.zk-brief__issue-num {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 2px;
+}
+
+.zk-brief__issue-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.45;
+  margin-bottom: 8px;
+  overflow-wrap: anywhere;
+}
+
+.zk-brief__issue-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.zk-brief__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.zk-brief__pill.is-amber {
+  background: var(--amber-soft);
+  color: var(--amber-text);
+}
+.zk-brief__pill.is-blue {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+.zk-brief__pill.is-green {
+  background: var(--green-soft);
+  color: var(--green-text);
+}
+.zk-brief__pill.is-red {
+  background: var(--red-soft);
+  color: var(--red-text);
+}
+.zk-brief__pill.is-neutral {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+}
+
+.zk-brief__chip {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* --------------------------- sections --------------------------- */
+
+.zk-brief__section {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.zk-brief__section-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.zk-brief__section-hint {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 12.4px;
+  line-height: 1.5;
+}
+
+/* clamped long text + toggle */
+
+.zk-brief__clamp {
+  margin-top: 9px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  max-height: calc(var(--zk-brief-clamp-lines, 6) * 1.6em);
+  overflow: hidden;
+}
+
+.zk-brief__clamp.is-open {
+  max-height: none;
+  overflow: visible;
+}
+
+.zk-brief__clamp-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  margin-top: 2px;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  color: var(--blue);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.zk-brief__clamp-toggle:hover {
+  text-decoration: underline;
+}
+
+/* --------------------------- evidence --------------------------- */
+
+.zk-brief__evidence {
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.zk-brief__evidence-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 11px;
+  align-items: start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 11px 13px;
+}
+
+.zk-brief__evidence-item.is-fact {
+  background: var(--blue-soft);
+  border-color: transparent;
+}
+
+.zk-brief__evidence-item.is-reported {
+  background: var(--amber-soft);
+  border-color: transparent;
+}
+
+.zk-brief__evidence-item.is-assumption {
+  background: var(--bg);
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+
+.zk-brief__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 3px 7px;
+  font-size: 10.4px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.zk-brief__evidence-item.is-fact .zk-brief__badge {
+  background: var(--blue);
+  color: #fff;
+}
+
+.zk-brief__evidence-item.is-reported .zk-brief__badge {
+  background: var(--surface);
+  color: var(--amber-text);
+}
+
+.zk-brief__evidence-item.is-assumption .zk-brief__badge {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px dashed var(--border-strong);
+}
+
+.zk-brief__badge.is-changed {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.zk-brief__evidence-body {
+  min-width: 0;
+}
+
+.zk-brief__evidence-body p {
+  color: var(--text);
+  font-size: 13.6px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.zk-brief__evidence-body p.is-italic {
+  font-style: italic;
+}
+
+.zk-brief__source {
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 12.3px;
+  font-weight: 700;
+}
+
+/* ----------------------------- plan ----------------------------- */
+
+.zk-brief__changes {
+  margin-top: 10px;
+  background: var(--blue-soft);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+
+.zk-brief__changes-title {
+  color: var(--blue);
+  font-size: 13.2px;
+  font-weight: 800;
+}
+
+.zk-brief__changes-summary {
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 13.7px;
+  line-height: 1.5;
+}
+
+.zk-brief__changes-meta {
+  margin-top: 7px;
+  color: var(--text-muted);
+  font-size: 12.3px;
+  font-weight: 700;
+}
+
+.zk-brief__plan {
+  margin-top: 11px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 11px;
+}
+
+.zk-brief__step {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+}
+
+.zk-brief__step-num {
+  width: 23px;
+  height: 23px;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 11.8px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.zk-brief__step.is-changed .zk-brief__step-num {
+  background: var(--blue);
+  color: #fff;
+}
+
+.zk-brief__step-body {
+  min-width: 0;
+}
+
+.zk-brief__step-text {
+  color: var(--text);
+  font-size: 14.2px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.zk-brief__step-body .zk-brief__badge {
+  margin-top: 5px;
+}
+
+/* superseded version history */
+
+.zk-brief__details {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.zk-brief__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 42px;
+  padding: 9px 13px;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 13.2px;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.zk-brief__summary::-webkit-details-marker {
+  display: none;
+}
+
+.zk-brief__summary:hover {
+  color: var(--blue);
+}
+
+.zk-brief__chevron {
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.16s ease;
+  flex: none;
+  margin-top: -3px;
+}
+
+.zk-brief__details[open] .zk-brief__chevron {
+  transform: rotate(225deg);
+  margin-top: 2px;
+}
+
+.zk-brief__old-versions {
+  padding: 4px 13px 10px;
+}
+
+.zk-brief__old-version {
+  padding-top: 10px;
+}
+
+.zk-brief__old-version + .zk-brief__old-version {
+  border-top: 1px solid var(--border);
+  margin-top: 10px;
+}
+
+.zk-brief__old-head {
+  font-size: 11.4px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.zk-brief__old-steps {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-muted);
+  font-size: 13.2px;
+  line-height: 1.5;
+  display: grid;
+  gap: 4px;
+}
+
+/* ---------------------------- risks ----------------------------- */
+
+.zk-brief__risks {
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.zk-brief__risk {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-left-color: var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 11px 13px;
+}
+
+.zk-brief__risk.is-medium {
+  border-left-color: var(--amber);
+}
+
+.zk-brief__risk.is-high {
+  background: var(--red-soft);
+  border-color: transparent;
+  border-left-color: var(--red);
+}
+
+.zk-brief__severity {
+  display: inline-flex;
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 10.4px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--bg);
+  color: var(--text-muted);
+}
+
+.zk-brief__risk.is-medium .zk-brief__severity {
+  background: var(--amber-soft);
+  color: var(--amber-text);
+}
+
+.zk-brief__risk.is-high .zk-brief__severity {
+  background: var(--surface);
+  color: var(--red-text);
+}
+
+.zk-brief__risk-body {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.zk-brief__risk-title {
+  font-size: 13.8px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.zk-brief__risk-detail {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 13.2px;
+  line-height: 1.5;
+}
+
+.zk-brief__mitigation {
+  margin-top: 4px;
+  color: var(--green-text);
+  font-size: 12.8px;
+  font-weight: 700;
+}
+
+/* ------------------------- uncertainties ------------------------ */
+
+.zk-brief__uncertainties {
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.zk-brief__uncertainties li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 10px 13px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.zk-brief__uncertainties li::before {
+  content: "?";
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px dashed var(--border-strong);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+/* --------------------------- responsive -------------------------- */
+
+@media (max-width: 760px) {
+  .zk-brief {
+    padding: 17px;
+    border-radius: 14px;
+  }
+
+  .zk-brief__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .zk-brief__evidence-item {
+    grid-template-columns: 1fr;
+  }
+
+  .zk-brief__agent-row {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .zk-brief {
+    padding: 14px;
+  }
+
+  .zk-brief__title {
+    font-size: 15.5px;
+  }
+
+  .zk-brief__fact {
+    font-size: 12.2px;
+    padding: 4px 9px;
+  }
+}
+
+/* ------------------------ reduced motion ------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .zk-brief *,
+  .zk-brief *::before,
+  .zk-brief *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
