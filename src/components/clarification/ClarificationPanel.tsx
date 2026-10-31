@@ -1,8 +1,14 @@
-// Clarification panel — the agent's question, suggested answers, the human's
-// composer, and the message thread. Workflow-owned: it emits answers upward
-// and never mutates the store itself.
+// Clarification panel — the agent's question, the human's choice of what should
+// happen next, the free-text fallback, and the message thread.
+// Workflow-owned: it emits answers upward and never mutates the store itself.
+//
+// The answer area is deliberately segmented: a "pick one" radio group for the
+// agent's suggested next steps (select, then send), separated from the
+// write-your-own composer. Selection and typed text are mutually exclusive so
+// there is never ambiguity about what will be sent.
 import { useEffect, useRef, useState } from "react";
 import type { ThreadMessage } from "../../types";
+import "./clarification.css";
 
 interface SuggestedAnswer {
   id: string;
@@ -25,6 +31,7 @@ export interface ClarificationPanelProps {
 
 export default function ClarificationPanel(props: ClarificationPanelProps) {
   const [text, setText] = useState("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const threadRef = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
@@ -32,11 +39,31 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
     if (el) el.scrollTop = el.scrollHeight;
   }, [props.messages.length]);
 
-  const submitTyped = () => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    props.onSubmitAnswer(null, trimmed);
+  const canSend = Boolean(selectedId) || text.trim().length > 0;
+
+  // Picking a segment and writing your own answer are separate paths:
+  // choosing one clears the other, so the send button always does exactly
+  // what the screen says it will.
+  const pickOption = (id: string) => {
+    setSelectedId(id);
     setText("");
+  };
+
+  const onTextChange = (value: string) => {
+    setText(value);
+    if (value.trim()) setSelectedId(null);
+  };
+
+  const send = () => {
+    const trimmed = text.trim();
+    if (trimmed) {
+      props.onSubmitAnswer(null, trimmed); // typed answer wins if both exist
+    } else if (selectedId) {
+      const option = props.suggestedAnswers.find((a) => a.id === selectedId);
+      if (option) props.onSubmitAnswer(option.id, option.label);
+    }
+    setText("");
+    setSelectedId(null);
   };
 
   const pill = props.awaitingAnswer ? (
@@ -56,7 +83,7 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
   );
 
   return (
-    <section className="card clarify" aria-label="Clarification">
+    <section className="card clarify zk-cp" aria-label="Clarification">
       <div className="card-head">
         <div>
           <p className="card-kicker">Clarification</p>
@@ -65,13 +92,14 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
         {pill}
       </div>
 
+      {/* The ask itself — made visually dominant so the idea is obvious. */}
       <div className="question-box">
         <div className="question-label">
           <span aria-hidden="true">?</span> Clarification question
         </div>
         <p className="question-body">{props.questionBody}</p>
         <p className="question-context">{props.questionContext}</p>
-        <p className="question-context" style={{ marginTop: 8, fontSize: 12.5 }}>
+        <p className="question-context zk-cp__clock">
           <strong>Real Ziki behaviour:</strong> while this question is open, the agent’s
           claim clock is paused — if unanswered for 4h, the claim is released
           (“owner_unresponsive”).
@@ -79,21 +107,48 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
       </div>
 
       {props.awaitingAnswer ? (
-        <>
-          <p className="suggested-label">Suggested answers — or write your own:</p>
-          <div className="suggested">
-            {props.suggestedAnswers.map((answer) => (
-              <button
-                key={answer.id}
-                type="button"
-                className="suggested-btn"
-                onClick={() => props.onSubmitAnswer(answer.id, answer.label)}
-              >
-                <span className="s-title">{answer.label}</span>
-                <span className="s-blurb">{answer.blurb}</span>
-              </button>
-            ))}
-          </div>
+        <div className="zk-cp__answer" data-testid="answer-zone">
+          {props.suggestedAnswers.length > 0 ? (
+            <fieldset className="zk-cp__choices">
+              <legend className="zk-cp__legend">
+                What should happen next?
+                <span className="zk-cp__legend-hint">
+                  Pick one — the agent rebuilds the plan around your choice.
+                </span>
+              </legend>
+              <div className="zk-cp__segments">
+                {props.suggestedAnswers.map((answer) => (
+                  <label
+                    key={answer.id}
+                    className="suggested-btn zk-cp__option"
+                    data-testid={`suggested-option-${answer.id}`}
+                    data-selected={selectedId === answer.id ? "true" : undefined}
+                  >
+                    <input
+                      type="radio"
+                      className="zk-cp__radio"
+                      name="zk-cp-next-step"
+                      value={answer.id}
+                      checked={selectedId === answer.id}
+                      onChange={() => pickOption(answer.id)}
+                    />
+                    <span className="zk-cp__radio-dot" aria-hidden="true" />
+                    <span className="zk-cp__option-text">
+                      <span className="s-title">{answer.label}</span>
+                      <span className="s-blurb">{answer.blurb}</span>
+                    </span>
+                    <span className="zk-cp__check" aria-hidden="true">
+                      ✓
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ) : null}
+
+          <p className="zk-cp__or">
+            <span>or write your own answer</span>
+          </p>
 
           <label className="composer-label" htmlFor="clarification-input">
             Your answer (free text)
@@ -104,20 +159,20 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
             className="answer-input"
             placeholder="Type your answer for the agent…"
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => onTextChange(e.target.value)}
           />
           <div className="composer-actions">
             <button
               type="button"
               data-testid="clarification-submit"
               className="btn btn-primary btn-sm"
-              disabled={!text.trim()}
-              onClick={submitTyped}
+              disabled={!canSend}
+              onClick={send}
             >
-              Post answer
+              {selectedId ? "Send this answer" : "Send answer"}
             </button>
           </div>
-        </>
+        </div>
       ) : (
         <p className="answered-note">
           <span aria-hidden="true">✓</span>

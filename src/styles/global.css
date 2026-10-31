@@ -231,7 +231,7 @@ button {
 
 .breadcrumb {
   font-size: 13px;
-  color: var(--text-subtle);
+  color: var(--text-muted);
   font-weight: 600;
   margin-bottom: 14px;
 }
@@ -279,7 +279,7 @@ button {
 .demo-note {
   margin-top: 34px;
   text-align: center;
-  color: var(--text-subtle);
+  color: var(--text-muted);
   font-size: 13px;
 }
 
@@ -305,7 +305,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-subtle);
+  color: var(--text-muted);
   margin: 0 0 4px;
 }
 
@@ -453,7 +453,7 @@ button {
 
 .agent-sub {
   font-size: 12.5px;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .agent-row .pill {
@@ -500,7 +500,7 @@ button {
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--text-subtle);
+  color: var(--text-muted);
   margin: 0 0 8px;
 }
 
@@ -660,14 +660,14 @@ button {
 .old-version-head {
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-subtle);
+  color: var(--text-muted);
   margin-bottom: 6px;
 }
 
 .old-version ol {
   margin: 0;
   padding-left: 20px;
-  color: var(--text-subtle);
+  color: var(--text-muted);
   font-size: 13px;
   display: flex;
   flex-direction: column;
@@ -747,7 +747,7 @@ button {
 .suggested-btn .s-blurb {
   display: block;
   font-size: 12.5px;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .answered-note {
@@ -807,7 +807,7 @@ button {
 
 .thread-empty {
   font-size: 13px;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .msg {
@@ -829,7 +829,7 @@ button {
 .msg-author {
   font-size: 11.5px;
   font-weight: 700;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .msg-body {
@@ -853,7 +853,7 @@ button {
 
 .msg-time {
   font-size: 11px;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 /* ---------- Decision panel ---------- */
@@ -924,7 +924,7 @@ button {
 .decision-hint {
   margin: 10px 0 0;
   font-size: 12.5px;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .feedback-form,

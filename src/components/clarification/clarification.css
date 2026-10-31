@@ -273,6 +273,212 @@
   }
 }
 
+/* =================================================================== *
+ * ClarificationPanel (.zk-cp) — question + segmented answer selection  *
+ * =================================================================== */
+
+/* Make the ask itself visually dominant. */
+.zk-cp .question-box {
+  border-left: 3px solid var(--blue);
+  background: var(--blue-soft);
+}
+
+.zk-cp .question-body {
+  font-size: 16.5px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.zk-cp__clock {
+  font-size: 12.5px;
+  margin-top: 8px;
+}
+
+/* Separate the answer zone from the question with a clear seam. */
+.zk-cp__answer {
+  border-top: 1px dashed var(--border-strong);
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.zk-cp__choices {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.zk-cp__legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.zk-cp__legend-hint {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-muted);
+}
+
+/* The segmented control: options share one bordered stack, 1px apart. */
+.zk-cp__segments {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.zk-cp__segments .suggested-btn {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 12px;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  padding: 12px 14px;
+  cursor: pointer;
+  background: var(--surface);
+  transition: background 120ms ease;
+}
+
+.zk-cp__segments .suggested-btn + .suggested-btn {
+  border-top: 1px solid var(--border);
+}
+
+.zk-cp__segments .suggested-btn:hover {
+  background: var(--blue-soft);
+}
+
+.zk-cp__option:focus-within {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
+.zk-cp__option[data-selected] {
+  background: var(--blue-soft);
+}
+
+/* Visually-hidden-but-focusable native radio (keyboard + SR support free). */
+.zk-cp__radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.zk-cp__radio-dot {
+  grid-column: 1;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #b9c2d6;
+  flex: none;
+  transition: border-color 120ms ease;
+}
+
+.zk-cp__radio-dot::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--blue);
+  transform: scale(0);
+  transition: transform 120ms ease;
+}
+
+.zk-cp__radio:checked ~ .zk-cp__radio-dot {
+  border-color: var(--blue);
+}
+
+.zk-cp__radio:checked ~ .zk-cp__radio-dot::after {
+  transform: scale(1);
+}
+
+.zk-cp__option-text {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.zk-cp__segments .suggested-btn .s-blurb {
+  color: var(--text-muted);
+}
+
+.zk-cp__check {
+  grid-column: 3;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.zk-cp__option[data-selected] .zk-cp__check {
+  display: inline-flex;
+}
+
+/* Seam between the pick-one control and the free-text composer. */
+.zk-cp__or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.zk-cp__or::before,
+.zk-cp__or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+.zk-cp__answer .composer-actions {
+  margin-top: 10px;
+}
+
+@media (max-width: 560px) {
+  .zk-cp .question-body {
+    font-size: 15.5px;
+  }
+
+  .zk-cp__segments .suggested-btn {
+    padding: 11px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zk-cp__option,
+  .zk-cp__radio-dot,
+  .zk-cp__radio-dot::after {
+    transition: none;
+  }
+}
+
 @media (max-width: 560px) {
   .zk-ct__msg {
     max-width: 100%;

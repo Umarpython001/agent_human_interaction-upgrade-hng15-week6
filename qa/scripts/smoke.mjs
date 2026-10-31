@@ -182,6 +182,7 @@ async function runJourney(page, base, consoleErrors) {
   // ---- J8: decline path requires a reason (fresh state) ------------------
   await page.reload({ waitUntil: "networkidle" });
   await page.locator(".suggested-btn").first().click();
+  await page.locator('[data-testid="clarification-submit"]').click();
   await wait(AGENT_DELAY + 900);
   await page.locator('[data-testid="decision-decline"]').click();
   record("J8a", "Decline asks for a required reason",

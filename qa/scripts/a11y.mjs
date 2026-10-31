@@ -59,6 +59,7 @@ async function main() {
     all.push(await scan(page, "State 1 — awaiting answer (initial)"));
     // move to decision state
     await page.locator(".suggested-btn").first().click();
+    await page.locator('[data-testid="clarification-submit"]').click();
     await wait(AGENT_DELAY + 900);
     all.push(await scan(page, "State 2 — awaiting decision (post-revision)"));
   } finally {
