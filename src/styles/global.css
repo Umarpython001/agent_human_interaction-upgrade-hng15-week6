@@ -1188,3 +1188,46 @@ html {
     font-size: 13px;
   }
 }
+
+/* ==========================================================================
+   Action-zone separation — the agent's BRIEF (left) and the HUMAN's prompt
+   zone (right) must read as two different places: wider gutter, the response
+   column sits on its own tinted panel with a "your move" kicker.
+   ========================================================================== */
+
+.layout {
+  gap: 34px;
+}
+
+.side {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px;
+  gap: 16px;
+}
+
+.side-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding-left: 9px;
+  border-left: 3px solid var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.side-kicker.is-idle {
+  border-left-color: var(--green);
+  color: var(--green-text);
+}
+
+@media (max-width: 880px) {
+  .side {
+    padding: 14px;
+  }
+}

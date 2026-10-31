@@ -411,3 +411,104 @@
     box-shadow: 0 0 0 3px rgba(31, 95, 217, 0.45);
   }
 }
+
+/* ==================================================================
+ * Mini coach — the folded guide that FOLLOWS the user after they start
+ * interacting (instead of vanishing). Same safe top-left band as the
+ * full card; one line + expand + dismiss.
+ * ================================================================== */
+
+.zk-guide__mini {
+  position: fixed;
+  top: 62px;
+  left: 16px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: stretch;
+  max-width: calc(100vw - 32px);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 18px rgba(21, 18, 31, 0.14);
+  overflow: hidden;
+  font-family: var(--font);
+}
+
+.zk-guide__mini-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 0;
+  padding: 7px 10px 7px 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.zk-guide__mini-open:hover {
+  background: var(--blue-soft);
+}
+
+.zk-guide__mini-badge {
+  width: 19px;
+  height: 19px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zk-guide__mini-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zk-guide__mini-hint {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+.zk-guide__mini-x {
+  background: none;
+  border: 0;
+  border-left: 1px solid var(--border);
+  padding: 0 11px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.zk-guide__mini-x:hover {
+  background: var(--red-soft);
+  color: var(--red-text);
+}
+
+.zk-guide__mini :focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
+@media (max-width: 760px) {
+  .zk-guide__mini {
+    top: 54px;
+    left: 8px;
+    max-width: calc(100vw - 16px);
+  }
+
+  .zk-guide__mini-hint {
+    display: none;
+  }
+}

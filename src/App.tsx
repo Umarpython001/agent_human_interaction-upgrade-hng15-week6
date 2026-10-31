@@ -175,8 +175,24 @@ export default function App() {
             plans={state.plans}
           />
 
-          {/* ref: attention effect scrolls this panel into view on hand-offs. */}
+          {/* ref: attention effect scrolls this panel into view on hand-offs.
+              The kicker marks this column as the HUMAN's zone, visually
+              separated from the agent's brief on the left. */}
           <div ref={sideRef} className={sideRing ? `side ${sideRing}` : "side"}>
+            <p
+              className={`side-kicker${working || state.status === "approved" || state.status === "declined" ? " is-idle" : ""}`}
+              data-testid="side-head"
+            >
+              {working
+                ? `${agent.name} is working — one moment`
+                : state.status === "approved"
+                  ? "Closed — approved"
+                  : state.status === "declined"
+                    ? "Closed — declined"
+                    : state.status === "revised_awaiting_review"
+                      ? "Your move — review the plan & decide"
+                      : "Your move — respond to the question"}
+            </p>
             <ClarificationPanel
               awaitingAnswer={state.status === "in_clarification" && state.phase === "human"}
               working={working}
