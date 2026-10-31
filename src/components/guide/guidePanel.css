@@ -330,3 +330,84 @@
     animation: none;
   }
 }
+
+/* ==================================================================
+ * Clickable steps — each instruction is a button that jumps to its
+ * card (scroll + flash handled in GuidePanel.tsx / .zk-guide-flash).
+ * ================================================================== */
+
+.zk-guide__go {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: start;
+  width: 100%;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 5px 7px;
+  margin: -5px -7px; /* let hover breathe to the card edges */
+  font: inherit;
+  font-size: 13.2px;
+  line-height: 1.5;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.zk-guide__go:hover {
+  background: var(--blue-soft);
+}
+
+.zk-guide__go:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 1px;
+}
+
+.zk-guide__arrow {
+  align-self: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--blue);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.zk-guide__go:hover .zk-guide__arrow,
+.zk-guide__go:focus-visible .zk-guide__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Flash applied to the TARGET card after a step click — a ringing glow that
+   fades out (reduced-motion: static ring for the same duration, then the
+   class is removed by the component). */
+.zk-guide-flash {
+  animation: zk-guide-flash 2.4s ease !important;
+}
+
+@keyframes zk-guide-flash {
+  0% {
+    box-shadow: 0 0 0 0 rgba(31, 95, 217, 0.55);
+  }
+  35% {
+    box-shadow: 0 0 0 6px rgba(31, 95, 217, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(31, 95, 217, 0.28);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zk-guide__go,
+  .zk-guide__arrow {
+    transition: none;
+  }
+
+  .zk-guide-flash {
+    animation: none !important;
+    box-shadow: 0 0 0 3px rgba(31, 95, 217, 0.45);
+  }
+}

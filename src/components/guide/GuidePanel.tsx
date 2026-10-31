@@ -3,17 +3,21 @@
 // the shared request state so the checklist tracks real progress — no
 // duplicated state, no invented data.
 //
-// The guide HOPS around the screen while open: each hop parks at a different
-// spot (left → right → top → bottom → corner) and pops in from that edge, so
-// it never covers one region for long and reads as a playful tour. The hop is
-// a pure CSS-class swap on the same DOM node (different animation-name
-// restarts the animation), so keyboard focus inside the card survives.
+// Interactivity: every step is a real button — click it and the guide steps
+// aside, scrolls to the card that step is about, and flashes it so the link
+// between instruction and action is unmistakable.
+//
+// The guide also HOPS around the screen while open: each hop parks at a
+// different spot (left → right → top → bottom → corner) and pops in from that
+// edge, so it never covers one region for long and reads as a playful tour.
+// The hop is a pure CSS-class swap on the same DOM node (different
+// animation-name restarts the animation), so keyboard focus survives.
 //
 // QA/UX safety: it starts docked in safe bands (left rail / top band — never
 // over the composer before the first interaction) and collapses itself at the
-// first click/keypress, so it can never intercept a page click once the
-// visitor starts following the instructions.
-import { useEffect, useState } from "react";
+// first click/keypress OUTSIDE itself, so it can never intercept a page click
+// once the visitor starts following the instructions.
+import { useEffect, useRef, useState } from "react";
 import { useRequestState } from "../../store/RequestProvider";
 import "./guidePanel.css";
 
@@ -41,6 +45,9 @@ const STEPS: GuideStep[] = [
   },
 ];
 
+/** Where each step takes you when clicked (document order, not status order). */
+const STEP_TARGETS = [".zk-brief", ".clarify", '[data-testid="brief-version"]', ".decide"];
+
 /** Hop order: park left → right → top → bottom → corner, entering from that edge. */
 const HOP_POSITIONS = [
   "pos-from-left",
@@ -56,12 +63,18 @@ export default function GuidePanel() {
   const state = useRequestState();
   const [open, setOpen] = useState(true);
   const [hop, setHop] = useState(0);
+  const flashTimer = useRef<number | null>(null);
 
-  // Step aside at the first interaction of the session: instructions are seen
-  // on arrival, then never sit under the cursor again. Non-toggle setters are
-  // used everywhere so the collapse event and a Hide click can't fight.
+  // Step aside at the first interaction OUTSIDE the guide: instructions are
+  // seen on arrival, then never sit under the cursor again — except while the
+  // visitor is using the guide itself (its Hide button closes it explicitly).
+  // Non-toggle setters keep the collapse event and a Hide click from fighting.
   useEffect(() => {
-    const collapse = () => setOpen(false);
+    const collapse = (e: Event) => {
+      const el = e.target as HTMLElement | null;
+      if (el?.closest?.(".zk-guide, .zk-guide__chip")) return;
+      setOpen(false);
+    };
     window.addEventListener("pointerdown", collapse, { once: true });
     window.addEventListener("keydown", collapse, { once: true });
     return () => {
@@ -79,8 +92,10 @@ export default function GuidePanel() {
     return () => window.clearInterval(id);
   }, []);
 
-  // Only a HUMAN reply ticks the answer steps — the thread is pre-seeded with
-  // the agent's question, so any-message would look pre-answered.
+  useEffect(() => () => {
+    if (flashTimer.current) window.clearTimeout(flashTimer.current);
+  }, []);
+
   const answered = state.messages.some((m) => m.author === "human");
   const revised = state.plans.length > 1;
   const decided =
@@ -89,6 +104,21 @@ export default function GuidePanel() {
   // Step 1 "ticks" once the human has moved on to answering.
   const ticks = [answered, answered, revised, decided];
   const activeIndex = ticks.findIndex((done) => !done);
+
+  // Click a step: guide steps aside → target scrolls in → brief flash links
+  // instruction to action. Reduced motion jumps instead of gliding.
+  const goToStep = (index: number) => {
+    const target = document.querySelector<HTMLElement>(STEP_TARGETS[index] ?? "");
+    setOpen(false);
+    if (!target) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+    target.classList.remove("zk-guide-flash"); // reflow restarts a re-click
+    void target.offsetWidth;
+    target.classList.add("zk-guide-flash");
+    if (flashTimer.current) window.clearTimeout(flashTimer.current);
+    flashTimer.current = window.setTimeout(() => target.classList.remove("zk-guide-flash"), 2400);
+  };
 
   if (!open) {
     return (
@@ -123,7 +153,7 @@ export default function GuidePanel() {
           Hide <span aria-hidden="true">▾</span>
         </button>
       </div>
-      <p className="zk-guide__intro">Four steps — follow them in order:</p>
+      <p className="zk-guide__intro">Four steps — click one to jump straight to it:</p>
       <ol className="zk-guide__list" data-testid="guide-list" data-active={activeIndex}>
         {STEPS.map((step, i) => (
           <li
@@ -132,22 +162,33 @@ export default function GuidePanel() {
             data-done={ticks[i] ? "true" : undefined}
             aria-current={i === activeIndex ? "step" : undefined}
           >
-            <span className="zk-guide__mark" aria-hidden="true">
-              {ticks[i] ? "✓" : i + 1}
-            </span>
-            <span className="zk-guide__text">
-              {step.text}
-              {ticks[i] ? (
-                <span className="zk-guide__sr"> (done)</span>
-              ) : i === activeIndex ? (
-                <span className="zk-guide__now"> — do this now</span>
-              ) : null}
-            </span>
+            <button
+              type="button"
+              className="zk-guide__go"
+              data-testid={`guide-step-${i + 1}`}
+              onClick={() => goToStep(i)}
+            >
+              <span className="zk-guide__mark" aria-hidden="true">
+                {ticks[i] ? "✓" : i + 1}
+              </span>
+              <span className="zk-guide__text">
+                {step.text}
+                {ticks[i] ? (
+                  <span className="zk-guide__sr"> (done)</span>
+                ) : i === activeIndex ? (
+                  <span className="zk-guide__now"> — do this now</span>
+                ) : null}
+              </span>
+              <span className="zk-guide__arrow" aria-hidden="true">
+                →
+              </span>
+            </button>
           </li>
         ))}
       </ol>
       <p className="zk-guide__foot">
-        This guide hides itself as soon as you start. Click ☰ to bring it back.
+        Click a step to jump to it. This guide hides itself once you start — click ☰ to bring it
+        back.
       </p>
     </aside>
   );

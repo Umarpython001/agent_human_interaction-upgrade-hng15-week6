@@ -6,6 +6,10 @@
 // agent's suggested next steps (select, then send), separated from the
 // write-your-own composer. Selection and typed text are mutually exclusive so
 // there is never ambiguity about what will be sent.
+//
+// Interactivity: keyboard shortcuts — press 1–9 to pick a numbered option,
+// Ctrl/⌘+Enter to send from anywhere (including the textarea). The digit
+// path is guarded so it can never fire while someone is typing in a field.
 import { useEffect, useRef, useState } from "react";
 import type { ThreadMessage } from "../../types";
 import "./clarification.css";
@@ -66,6 +70,39 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
     setSelectedId(null);
   };
 
+  // Latest-render ref so the window listener is registered once but always
+  // calls the current closures (no stale state, no re-binding churn).
+  const keyHandler = useRef<(e: KeyboardEvent) => void>(() => undefined);
+  keyHandler.current = (e: KeyboardEvent) => {
+    // Ctrl/⌘+Enter sends from anywhere — standard composer expectation.
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      if (canSend && props.awaitingAnswer) {
+        e.preventDefault();
+        send();
+      }
+      return;
+    }
+    // Number keys pick an option — but never while a field has focus, so
+    // typing digits into the textarea keeps meaning "type a digit".
+    const t = e.target as HTMLElement | null;
+    const inField =
+      !!t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+    if (inField || !props.awaitingAnswer || props.suggestedAnswers.length === 0) return;
+    const n = Number.parseInt(e.key, 10);
+    if (Number.isNaN(n) || n < 1 || n > props.suggestedAnswers.length) return;
+    const option = props.suggestedAnswers[n - 1];
+    if (option) {
+      e.preventDefault();
+      pickOption(option.id);
+    }
+  };
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => keyHandler.current(e);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const pill = props.awaitingAnswer ? (
     <span className="pill pill-amber">
       <span className="dot" aria-hidden="true">
@@ -117,7 +154,7 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
                 </span>
               </legend>
               <div className="zk-cp__segments">
-                {props.suggestedAnswers.map((answer) => (
+                {props.suggestedAnswers.map((answer, index) => (
                   <label
                     key={answer.id}
                     className="suggested-btn zk-cp__option"
@@ -134,7 +171,12 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
                     />
                     <span className="zk-cp__radio-dot" aria-hidden="true" />
                     <span className="zk-cp__option-text">
-                      <span className="s-title">{answer.label}</span>
+                      <span className="s-title">
+                        <kbd className="zk-cp__key" aria-hidden="true">
+                          {index + 1}
+                        </kbd>
+                        {answer.label}
+                      </span>
                       <span className="s-blurb">{answer.blurb}</span>
                     </span>
                     <span className="zk-cp__check" aria-hidden="true">
@@ -160,7 +202,13 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
             placeholder="Type your answer for the agent…"
             value={text}
             onChange={(e) => onTextChange(e.target.value)}
-            aria-describedby={canSend ? undefined : "zk-cp-send-hint"}
+            aria-describedby={
+              canSend
+                ? props.suggestedAnswers.length > 0
+                  ? "zk-cp-kbd-tip"
+                  : undefined
+                : "zk-cp-send-hint"
+            }
           />
           <div className="composer-actions">
             <button
@@ -188,13 +236,27 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
                 : "Type your answer — Send turns on as soon as you do."}
             </p>
           )}
+          {/* Always-on shortcut legend so the keyboard path is discoverable. */}
+          {props.suggestedAnswers.length > 0 ? (
+            <p className="zk-cp__kbd-tip" id="zk-cp-kbd-tip" data-testid="clarification-kbd-tip">
+              Shortcut: press <kbd>1</kbd>–<kbd>{props.suggestedAnswers.length}</kbd> to pick an
+              option · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to send
+            </p>
+          ) : null}
         </div>
       ) : (
         <p className="answered-note">
           <span aria-hidden="true">✓</span>
-          {props.working
-            ? "Answer sent — the agent is updating the plan (simulated, ~2 seconds)."
-            : "Answer sent — your answer was incorporated into the plan."}
+          {props.working ? "Answer sent — the agent is updating the plan (simulated, ~2 seconds)" : "Answer sent — your answer was incorporated into the plan."}
+          {/* Three bouncing dots say "working" without a spinner dependency;
+              hidden from AT (the sentence above already conveys it). */}
+          {props.working ? (
+            <span className="zk-cp__thinking" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          ) : null}
         </p>
       )}
 

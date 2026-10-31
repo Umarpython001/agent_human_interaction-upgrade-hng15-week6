@@ -3,6 +3,8 @@
 // Also the mount point for the on-page instructions guide (GuidePanel),
 // which lives outside the <header> because it is viewport-fixed.
 import GuidePanel from "./guide/GuidePanel";
+import ActionToast from "./toast/ActionToast";
+import ConfettiBurst from "./toast/ConfettiBurst";
 
 function ZikiMark() {
   return (
@@ -92,6 +94,8 @@ export default function TopNav() {
       </header>
 
       <GuidePanel />
+      <ActionToast />
+      <ConfettiBurst />
     </>
   );
 }

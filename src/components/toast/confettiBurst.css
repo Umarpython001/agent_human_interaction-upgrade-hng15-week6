@@ -1,0 +1,42 @@
+/* ==================================================================
+ * ConfettiBurst — one-shot approval celebration (UI agent)
+ * Prefix: .zk-confetti. Container is pointer-events: none (never
+ * intercepts clicks) and aria-hidden (pure decoration).
+ * ================================================================== */
+
+.zk-confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.zk-confetti__bit {
+  position: absolute;
+  top: -14px;
+  border-radius: 2px;
+  animation-name: zk-confetti-fall;
+  animation-timing-function: cubic-bezier(0.25, 0.6, 0.4, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes zk-confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(96vh) rotate(var(--zk-spin, 360deg));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zk-confetti {
+    display: none;
+  }
+}
