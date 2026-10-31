@@ -605,3 +605,311 @@
     opacity: 0.8;
   }
 }
+
+/* ==================================================================
+ * Submit-button effects — the moment a "next step" is picked, the
+ * Send button visibly ARMS: spring pop + one-shot ring pulse, then a
+ * persistent glow with a slow light sweep. Typed-text enablement gets
+ * a quieter rise only, so the pick path reads as the primary action.
+ * All decorative motion dies under prefers-reduced-motion (state is
+ * still carried by the glow + label, never by motion alone).
+ * ================================================================== */
+
+.zk-cp__submit {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Typed-text path: quiet "ready" rise, no glow. */
+.zk-cp__submit.is-ready {
+  animation: zk-cp-ready 260ms ease-out both;
+}
+
+@keyframes zk-cp-ready {
+  from {
+    transform: translateY(3px);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Option-picked path: spring pop + expanding ring, then steady glow. */
+.zk-cp__submit.is-armed {
+  box-shadow: 0 4px 16px rgba(31, 95, 217, 0.45);
+  animation: zk-cp-arm-pop 440ms cubic-bezier(0.2, 1.5, 0.35, 1) both,
+    zk-cp-arm-ring 700ms ease-out 120ms both;
+}
+
+@keyframes zk-cp-arm-pop {
+  0% {
+    transform: scale(0.9);
+    filter: brightness(1.25);
+  }
+  60% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes zk-cp-arm-ring {
+  0% {
+    box-shadow: 0 4px 16px rgba(31, 95, 217, 0.45), 0 0 0 0 rgba(31, 95, 217, 0.5);
+  }
+  100% {
+    box-shadow: 0 4px 16px rgba(31, 95, 217, 0.45), 0 0 0 12px rgba(31, 95, 217, 0);
+  }
+}
+
+/* Slow diagonal light sweep across the armed button (button has
+   overflow:hidden + its own radius, so the sweep clips cleanly). */
+.zk-cp__submit.is-armed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.5) 48%,
+    transparent 64%
+  );
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  animation: zk-cp-sweep 2.2s ease-in-out 0.55s infinite;
+  pointer-events: none;
+}
+
+@keyframes zk-cp-sweep {
+  0% {
+    background-position: 130% 0;
+  }
+  55%,
+  100% {
+    background-position: -60% 0;
+  }
+}
+
+/* Arrow slides in beside the armed label. */
+.zk-cp__send-arrow {
+  display: inline-block;
+  margin-left: 6px;
+  font-weight: 800;
+  animation: zk-cp-arrow-in 300ms cubic-bezier(0.2, 1.4, 0.35, 1) 80ms both;
+}
+
+@keyframes zk-cp-arrow-in {
+  from {
+    opacity: 0;
+    transform: translateX(-7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* The chosen segment responds too: springy check + snappier radio fill. */
+.zk-cp__option[data-selected] .zk-cp__check {
+  animation: zk-cp-check-pop 320ms cubic-bezier(0.2, 1.6, 0.35, 1) both;
+}
+
+@keyframes zk-cp-check-pop {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.zk-cp__radio-dot::after {
+  transition: transform 240ms cubic-bezier(0.2, 1.5, 0.35, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zk-cp__submit.is-ready,
+  .zk-cp__submit.is-armed,
+  .zk-cp__submit.is-armed::after,
+  .zk-cp__send-arrow,
+  .zk-cp__option[data-selected] .zk-cp__check {
+    animation: none !important;
+  }
+
+  .zk-cp__submit.is-armed {
+    box-shadow: 0 0 0 3px rgba(31, 95, 217, 0.35);
+  }
+
+  .zk-cp__submit.is-armed::after {
+    display: none;
+  }
+}
+
+/* ==================================================================
+ * Selection magic — sparkle burst + breathing aura on the picked
+ * option, and a glowing beam drawn from the pick to the armed Send
+ * button (geometry from ClarificationPanel's measure effect).
+ * Decorative only: pointer-events:none + aria-hidden in the markup,
+ * fully disabled under prefers-reduced-motion (state still carried by
+ * the ring/check/label, never by motion alone).
+ * ================================================================== */
+
+.zk-cp__answer {
+  position: relative; /* anchor for the beam */
+}
+
+.zk-cp__option {
+  position: relative;
+}
+
+/* Let the magic spill past the segment borders: drop the clipping and
+   restore the container's rounded corners on the end segments. */
+.zk-cp__segments {
+  overflow: visible;
+}
+
+.zk-cp__segments .suggested-btn:first-child {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.zk-cp__segments .suggested-btn:last-child {
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+/* Chosen option: inset ring + breathing outer glow. */
+.zk-cp__option[data-selected] {
+  z-index: 1;
+  box-shadow: inset 0 0 0 2px var(--blue), 0 0 14px rgba(31, 95, 217, 0.35);
+  animation: zk-cp-aura 1.8s ease-in-out infinite;
+}
+
+@keyframes zk-cp-aura {
+  50% {
+    box-shadow: inset 0 0 0 2px var(--blue), 0 0 24px rgba(31, 95, 217, 0.6);
+  }
+}
+
+/* Sparkle burst — anchored on the radio dot, flies outward along --a. */
+.zk-cp__sparkles {
+  position: absolute;
+  left: 23px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.zk-cp__spark {
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: zk-cp-spark 720ms cubic-bezier(0.15, 0.8, 0.3, 1) both;
+}
+
+.zk-cp__spark:nth-child(2n) {
+  width: 5px;
+  height: 5px;
+  left: -2.5px;
+  top: -2.5px;
+  background: var(--amber, #f59e0b);
+  animation-delay: 55ms;
+}
+
+.zk-cp__spark:nth-child(3n) {
+  border-radius: 1px;
+  background: var(--green, #16a34a);
+  animation-delay: 110ms;
+}
+
+@keyframes zk-cp-spark {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateX(6px) scale(0.4);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateX(52px) scale(1.15);
+  }
+}
+
+/* The beam: draws along --ang with origin at the pick, then a light
+   particle travels down it toward Send, then it fades away. */
+.zk-cp__beam {
+  position: absolute;
+  width: 4px;
+  margin-left: -2px;
+  border-radius: 3px;
+  pointer-events: none;
+  transform-origin: 0 0;
+  background: linear-gradient(to bottom, rgba(31, 95, 217, 0.1), var(--blue));
+  box-shadow: 0 0 10px rgba(31, 95, 217, 0.65);
+  animation: zk-cp-beam-draw 380ms ease-out both, zk-cp-beam-fade 320ms ease-in 830ms both;
+}
+
+@keyframes zk-cp-beam-draw {
+  from {
+    transform: rotate(var(--ang)) scaleY(0);
+  }
+  to {
+    transform: rotate(var(--ang)) scaleY(1);
+  }
+}
+
+@keyframes zk-cp-beam-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+.zk-cp__beam::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 12px 3px rgba(147, 197, 253, 0.95);
+  animation: zk-cp-beam-travel 620ms cubic-bezier(0.3, 0.7, 0.4, 1) 140ms both;
+}
+
+@keyframes zk-cp-beam-travel {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(var(--len) - 10px));
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zk-cp__option[data-selected] {
+    animation: none;
+    box-shadow: inset 0 0 0 2px var(--blue);
+  }
+
+  .zk-cp__sparkles,
+  .zk-cp__beam {
+    display: none;
+  }
+}
