@@ -160,6 +160,7 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
             placeholder="Type your answer for the agent…"
             value={text}
             onChange={(e) => onTextChange(e.target.value)}
+            aria-describedby={canSend ? undefined : "zk-cp-send-hint"}
           />
           <div className="composer-actions">
             <button
@@ -167,18 +168,33 @@ export default function ClarificationPanel(props: ClarificationPanelProps) {
               data-testid="clarification-submit"
               className="btn btn-primary btn-sm"
               disabled={!canSend}
+              aria-describedby={canSend ? undefined : "zk-cp-send-hint"}
               onClick={send}
             >
               {selectedId ? "Send this answer" : "Send answer"}
             </button>
           </div>
+          {/* A disabled Send with no explanation feels broken; say exactly
+              what turns it on. Rendered only while disabled so the hint and
+              its aria-describedby targets always stay in sync. */}
+          {canSend ? null : (
+            <p
+              className="zk-cp__send-hint"
+              id="zk-cp-send-hint"
+              data-testid="clarification-send-hint"
+            >
+              {props.suggestedAnswers.length > 0
+                ? "Choose an option above, or type your own answer — Send turns on as soon as you do."
+                : "Type your answer — Send turns on as soon as you do."}
+            </p>
+          )}
         </div>
       ) : (
         <p className="answered-note">
           <span aria-hidden="true">✓</span>
           {props.working
-            ? "Answer sent — the agent is preparing an updated plan."
-            : "Your answer was incorporated into the plan."}
+            ? "Answer sent — the agent is updating the plan (simulated, ~2 seconds)."
+            : "Answer sent — your answer was incorporated into the plan."}
         </p>
       )}
 

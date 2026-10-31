@@ -1,0 +1,174 @@
+/* Clarification Loop progress stepper — Workstream A.
+   Scoped: every selector is prefixed .zk-loop (including the shared
+   .zk-loop-attention affordance that App toggles on other components'
+   roots). Reads LEAD's tokens; never forks a second token set. */
+
+.zk-loop {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  /* Matches the page-head -> layout rhythm in global.css. */
+  margin-bottom: 22px;
+  color: var(--text);
+  font-family: inherit;
+}
+
+/* One "right now" line above the steps — the honest subtitle. */
+.zk-loop__now {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  /* --text-muted for AA; --text-subtle fails contrast on white. */
+  color: var(--text-muted);
+}
+
+.zk-loop__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.zk-loop__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+}
+
+/* Marker circle: number for upcoming/current, check for done.
+   aria-hidden in the markup — the <li> carries the real state. */
+.zk-loop__marker {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.zk-loop__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  min-width: 0;
+}
+
+.zk-loop__label {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+/* -- done -------------------------------------------------------------- */
+.zk-loop__step--done .zk-loop__marker {
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--green-text);
+}
+
+.zk-loop__step--done .zk-loop__label {
+  color: var(--text-muted);
+}
+
+/* -- current ------------------------------------------------------------ */
+.zk-loop__step--current {
+  background: var(--blue-soft);
+}
+
+.zk-loop__step--current .zk-loop__marker {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: #ffffff; /* white on --blue: ~4.9:1, AA pass */
+}
+
+/* "You're here" chip: white on brand blue (AA). Never colour-only state —
+   the current <li> also carries aria-current="step". */
+.zk-loop__here {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--blue);
+  color: #ffffff;
+}
+
+/* -- upcoming ----------------------------------------------------------- */
+.zk-loop__step--upcoming .zk-loop__label {
+  color: var(--text-muted);
+}
+
+/* Screen-reader-only state word ("Done" / "Not started yet"). */
+.zk-loop__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -- attention affordance (toggled imperatively by App) ------------------ */
+/* Static ring + gentle pulse used to mark "the ball moved here".
+   Applied to .side or the action-brief card root; App removes it after
+   the pulse so it never lingers as decoration. No border-radius here —
+   the ring must not fight the host element's own radius (and modern
+   outlines follow the border box's radius anyway). */
+.zk-loop-attention {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.zk-loop-attention--pulse {
+  animation: zk-loop-attention-pulse 700ms ease-in-out 2;
+}
+
+@keyframes zk-loop-attention-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.28);
+  }
+}
+
+/* Motion-sensitive users get the static ring only; App also scrolls
+   with behavior "auto" under the same media query. */
+@media (prefers-reduced-motion: reduce) {
+  .zk-loop-attention--pulse {
+    animation: none;
+  }
+}
+
+/* -- responsive ---------------------------------------------------------- */
+/* Wide: three equal columns, dividers between them. */
+@media (min-width: 760px) {
+  .zk-loop__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .zk-loop__step + .zk-loop__step {
+    border-left: 1px solid var(--border);
+  }
+}

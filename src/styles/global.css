@@ -996,3 +996,195 @@ button {
     padding: 18px;
   }
 }
+
+/* ==========================================================================
+   Design pass — page shell & micro-interactions (2026-10-31).
+   Owns: hero header, scroll anchors for state-driven navigation, card/button
+   motion, mobile fallback. Component-scoped files keep their own rules.
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Sticky topnav must never cover the card we scroll into view. */
+.card,
+.side,
+.layout,
+[data-testid="brief-version"] {
+  scroll-margin-top: 96px;
+}
+
+::selection {
+  background: var(--blue-soft);
+  color: var(--text);
+}
+
+/* ---------- Hero-style page header ---------- */
+
+.page-head {
+  align-items: center;
+  background:
+    radial-gradient(1200px 200px at 12% -40%, rgba(31, 95, 217, 0.1), transparent 60%),
+    var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.page-sub strong {
+  color: var(--text);
+}
+
+/* ---------- Card affordance ---------- */
+
+.card {
+  transition: box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 8px 24px rgba(21, 18, 31, 0.07);
+}
+
+.card-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--blue);
+  opacity: 0.85;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(31, 95, 217, 0.25);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- Thread polish ---------- */
+
+.msg {
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.msg:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(21, 18, 31, 0.06);
+}
+
+/* ---------- Footer note ---------- */
+
+.demo-note {
+  border-top: 1px dashed var(--border-strong);
+  padding-top: 16px;
+  margin-top: 38px;
+}
+
+/* ---------- Motion & mobile fallbacks ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .card,
+  .btn,
+  .msg {
+    transition: none;
+  }
+
+  .btn:hover:not(:disabled),
+  .btn:active:not(:disabled),
+  .msg:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 880px) {
+  .page {
+    padding: 18px 16px 48px;
+  }
+
+  .page-head {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 18px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side {
+    position: static;
+  }
+
+  .card {
+    padding: 18px 16px;
+  }
+}
+
+/* Topnav compacts on phones: center links + points pill step aside so the
+   brand and account controls never overflow horizontally. */
+@media (max-width: 760px) {
+  .topnav {
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .topnav-center,
+  .points-pill,
+  .workspace-btn,
+  .topnav-divider {
+    display: none;
+  }
+
+  .brand {
+    font-size: 18px;
+  }
+
+  .agents-btn {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .user-chip {
+    padding: 4px 10px 4px 5px;
+    font-size: 13px;
+  }
+}

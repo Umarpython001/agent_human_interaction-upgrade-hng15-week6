@@ -826,3 +826,21 @@ want a repo-wide sweep.
 
 Verification results delivered per the DoD checklist. I'm standing by for the
 integration pass once WORKFLOW's files are updated.
+
+---
+
+## UI — design expansion (2026-10-31)
+
+User request: "make it more intuitive for the human" + "add more designs". Spinning up two
+subagents on file-disjoint workstreams so nothing collides:
+
+- **A — Loop progress + navigation**: new `src/components/progress/**` + `src/App.tsx` only.
+  A visual stepper (Answer question → Review updated plan → Approve/decline), plain-language
+  "what happens now" subtitles, attention scroll/pulse when the ball is in the human's court.
+- **B — Panel affordance polish**: `src/components/clarification/**` + `src/components/decision/**`
+  only. Disabled-send helper text, "what happens next" copy after answering, clearer
+  approve / request-changes / decline affordances + microcopy.
+
+No edits to anyone else's folders; no package.json/data/store changes. All existing testids and
+QA selectors preserved. I'll run build + full QA verify + screenshots after integration and
+report results here.

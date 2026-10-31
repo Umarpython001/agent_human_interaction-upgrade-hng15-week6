@@ -791,3 +791,100 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ==================================================================
+ * Design pass — attention cues (2026-10-31)
+ * Makes "it's your turn" and "what changed" impossible to miss.
+ * ================================================================== */
+
+/* Kicker marker matches the global card-kicker accent. */
+.zk-brief__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.zk-brief__kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--blue);
+  opacity: 0.85;
+}
+
+/* Waiting-on-human status dot breathes gently (decorative only — the pill
+   text already carries the meaning, so no a11y dependency). */
+.zk-brief__status.is-amber .zk-brief__dot {
+  animation: zk-brief-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes zk-brief-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* "What changed" is the review hotspot — give it a solid accent edge. */
+.zk-brief__changes {
+  border-left: 3px solid var(--blue);
+}
+
+/* Issue block reads as an inbound ticket. */
+.zk-brief__issue-block {
+  border-left: 3px solid var(--blue-soft);
+}
+
+/* Section titles get a short rule for scanability. */
+.zk-brief__section-title::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--blue);
+  vertical-align: middle;
+  margin-right: 7px;
+  opacity: 0.7;
+}
+
+/* Subtle hover lift on interactive/evidence surfaces. */
+.zk-brief__evidence-item,
+.zk-brief__risk,
+.zk-brief__uncertainties li {
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.zk-brief__evidence-item:hover,
+.zk-brief__risk:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(21, 18, 31, 0.06);
+}
+
+.zk-brief__details:hover .zk-brief__summary {
+  background: var(--blue-soft);
+}
+
+/* Kill the new motion under reduced-motion explicitly (animation cannot be
+   "shortened" — it must be removed). */
+@media (prefers-reduced-motion: reduce) {
+  .zk-brief__status.is-amber .zk-brief__dot {
+    animation: none !important;
+  }
+
+  .zk-brief__evidence-item,
+  .zk-brief__risk,
+  .zk-brief__uncertainties li {
+    transition: none;
+  }
+
+  .zk-brief__evidence-item:hover,
+  .zk-brief__risk:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,332 @@
+/* ==================================================================
+ * GuidePanel — instructions overlay (UI agent)
+ * Prefix: .zk-guide — no global selectors outside this component.
+ *
+ * Docked in the fixed top band (over breadcrumb + page head only), hard
+ * height-capped so it can never cover the cards' interactive content:
+ * clicks always reach the page underneath.
+ * Tokens: LEAD's src/styles/tokens.css. Small text uses --text-muted
+ * (AA) — never --text-subtle.
+ * ================================================================== */
+
+.zk-guide {
+  position: fixed;
+  top: 62px;
+  left: 16px;
+  z-index: 30;
+  box-sizing: border-box;
+  width: min(460px, calc(100vw - 32px));
+  max-height: min(320px, calc(100vh - 140px));
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-card);
+  box-shadow: 0 12px 32px rgba(21, 18, 31, 0.14);
+  padding: 14px 16px;
+  font-family: var(--font);
+  color: var(--text);
+}
+
+.zk-guide *,
+.zk-guide *::before,
+.zk-guide *::after {
+  box-sizing: border-box;
+}
+
+.zk-guide :where(p, ol) {
+  margin: 0;
+}
+
+.zk-guide__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.zk-guide__title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.zk-guide__title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--blue);
+  opacity: 0.85;
+}
+
+.zk-guide__hide {
+  background: none;
+  border: 0;
+  padding: 4px 6px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+}
+
+.zk-guide__hide:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.zk-guide__intro {
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.zk-guide__list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+  counter-reset: none;
+}
+
+.zk-guide__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 9px;
+  align-items: start;
+  font-size: 13.2px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* Done/upcoming text stays AA-readable; state lives in the marker + words. */
+.zk-guide__item[data-done] {
+  color: var(--text-muted);
+}
+
+.zk-guide__mark {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 11.5px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.zk-guide__item[data-done] .zk-guide__mark {
+  background: var(--green-soft);
+  color: var(--green-text);
+}
+
+.zk-guide__now {
+  color: var(--blue);
+  font-weight: 800;
+}
+
+.zk-guide__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.zk-guide__foot {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-strong);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Collapsed chip — same anchor, one line tall, well clear of page content. */
+.zk-guide__chip {
+  position: fixed;
+  top: 62px;
+  left: 16px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 18px rgba(21, 18, 31, 0.12);
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.zk-guide__chip:hover {
+  background: var(--blue-soft);
+  border-color: var(--blue);
+}
+
+.zk-guide :where(button):focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .zk-guide,
+  .zk-guide__chip {
+    top: 54px;
+    left: 8px;
+  }
+
+  .zk-guide {
+    width: calc(100vw - 16px);
+    padding: 12px 13px;
+  }
+}
+
+/* ==================================================================
+ * Pop-around tour — each hop parks somewhere new and enters from its
+ * edge (left → right → top → bottom → corner). Anchors must fully
+ * override the base top/left above (set left:auto where the base
+ * would otherwise win under LTR width rules).
+ * Class swap restarts the animation (new animation-name) without a
+ * DOM remount, so focus inside the card is preserved.
+ * ================================================================== */
+
+.zk-guide.pos-from-left {
+  top: 50%;
+  left: 20px;
+  right: auto;
+  bottom: auto;
+  transform: translateY(-50%);
+  animation: zk-guide-in-left 480ms cubic-bezier(0.2, 0.9, 0.3, 1.12) both;
+}
+
+@keyframes zk-guide-in-left {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-44px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.zk-guide.pos-from-right {
+  top: 64px;
+  left: auto;
+  right: 20px;
+  bottom: auto;
+  transform: none;
+  animation: zk-guide-in-right 480ms cubic-bezier(0.2, 0.9, 0.3, 1.12) both;
+}
+
+@keyframes zk-guide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(44px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.zk-guide.pos-from-top {
+  top: 64px;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+  animation: zk-guide-in-top 480ms cubic-bezier(0.2, 0.9, 0.3, 1.12) both;
+}
+
+@keyframes zk-guide-in-top {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-44px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.zk-guide.pos-from-bottom {
+  top: auto;
+  left: 50%;
+  right: auto;
+  bottom: 24px;
+  transform: translateX(-50%);
+  animation: zk-guide-in-bottom 480ms cubic-bezier(0.2, 0.9, 0.3, 1.12) both;
+}
+
+@keyframes zk-guide-in-bottom {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(44px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Fifth spot: bottom-left corner, slid in from the edge ("other place"). */
+.zk-guide.pos-corner {
+  top: auto;
+  left: 20px;
+  right: auto;
+  bottom: 24px;
+  transform: none;
+  animation: zk-guide-in-corner 480ms cubic-bezier(0.2, 0.9, 0.3, 1.12) both;
+}
+
+@keyframes zk-guide-in-corner {
+  from {
+    opacity: 0;
+    transform: translateX(-44px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* No motion, no tour: hold one spot, no entrance. */
+@media (prefers-reduced-motion: reduce) {
+  .zk-guide {
+    animation: none !important;
+  }
+}
+
+/* Phones: the tour collapses back to a single safe dock under the nav —
+   hopping across a 390px screen would only obscure the content it explains. */
+@media (max-width: 760px) {
+  .zk-guide.pos-from-left,
+  .zk-guide.pos-from-right,
+  .zk-guide.pos-from-top,
+  .zk-guide.pos-from-bottom,
+  .zk-guide.pos-corner {
+    top: 54px;
+    left: 8px;
+    right: 8px;
+    bottom: auto;
+    transform: none;
+    width: auto;
+    animation: none;
+  }
+}

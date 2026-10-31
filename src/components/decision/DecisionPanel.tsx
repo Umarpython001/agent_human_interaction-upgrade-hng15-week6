@@ -3,6 +3,7 @@
 // Request-changes and Decline both REQUIRE a reason (anti-rubber-stamp paths).
 import { useState } from "react";
 import type { DecisionRecord, RequestStatus } from "../../types";
+import "./decision.css";
 
 export interface DecisionPanelProps {
   status: RequestStatus;
@@ -127,31 +128,65 @@ export default function DecisionPanel(props: DecisionPanelProps) {
 
         {status === "revised_awaiting_review" && (
           <>
-            <div className="decision-controls">
-              <button
-                type="button"
-                className="btn btn-primary"
-                data-testid="decision-approve"
-                onClick={props.onApprove}
-              >
-                <span aria-hidden="true">✓</span> Approve plan
-              </button>
-              <button
-                type="button"
-                className="btn btn-outline"
-                data-testid="decision-changes"
-                onClick={() => setMode("feedback")}
-              >
-                Request changes
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                data-testid="decision-decline"
-                onClick={() => setMode("confirm")}
-              >
-                Decline
-              </button>
+            {/* Each action carries its plain-language consequence right under
+                the button, so the effect of the click is never a surprise.
+                Also wired to screen readers via aria-describedby. */}
+            <div className="decision-controls zk-dp__controls">
+              <div className="zk-dp__action">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  data-testid="decision-approve"
+                  aria-describedby="zk-dp-approve-note"
+                  onClick={props.onApprove}
+                >
+                  <span aria-hidden="true">✓</span> Approve plan
+                </button>
+                <p
+                  className="zk-dp__consequence"
+                  id="zk-dp-approve-note"
+                  data-testid="decision-consequence-approve"
+                >
+                  Authorize the agent to start work on issue #{issueNumber} (approval is not
+                  completion)
+                </p>
+              </div>
+              <div className="zk-dp__action">
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  data-testid="decision-changes"
+                  aria-describedby="zk-dp-changes-note"
+                  onClick={() => setMode("feedback")}
+                >
+                  Request changes
+                </button>
+                <p
+                  className="zk-dp__consequence"
+                  id="zk-dp-changes-note"
+                  data-testid="decision-consequence-changes"
+                >
+                  Tell the agent what to fix — it will revise again
+                </p>
+              </div>
+              <div className="zk-dp__action">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  data-testid="decision-decline"
+                  aria-describedby="zk-dp-decline-note"
+                  onClick={() => setMode("confirm")}
+                >
+                  Decline
+                </button>
+                <p
+                  className="zk-dp__consequence"
+                  id="zk-dp-decline-note"
+                  data-testid="decision-consequence-decline"
+                >
+                  Stop this request — a short reason is required
+                </p>
+              </div>
             </div>
             <p className="decision-hint">
               You’re deciding on plan v{currentVersion}. Requesting changes sends it back to{" "}

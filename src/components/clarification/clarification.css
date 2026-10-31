@@ -461,6 +461,16 @@
   margin-top: 10px;
 }
 
+/* Why Send is disabled — never leave a dead button without an explanation.
+   12.5px + --text-muted (#5a6079) keeps AA contrast; --text-subtle would fail. */
+.zk-cp__send-hint {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 560px) {
   .zk-cp .question-body {
     font-size: 15.5px;

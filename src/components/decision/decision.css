@@ -374,3 +374,38 @@
     margin-left: 0;
   }
 }
+
+/* =================================================================== *
+ * DecisionPanel (.zk-dp) — per-action consequence copy                *
+ * =================================================================== */
+
+/* One plain-language consequence line under each action so the human
+   knows the effect before clicking (never colour-only meaning). Actions
+   stack full-width at every breakpoint: 390px gets no truncation and the
+   desktop column reads as a deliberate action list, not cramped buttons. */
+.zk-dp__controls {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.zk-dp__action {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  min-width: 0;
+}
+
+.zk-dp__action .btn {
+  width: 100%;
+}
+
+/* 12.5px + --text-muted (#5a6079) is AA-safe; --text-subtle would fail. */
+.zk-dp__consequence {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
