@@ -79,7 +79,9 @@ export default function GuidePanel() {
     return () => window.clearInterval(id);
   }, []);
 
-  const answered = state.messages.length > 0;
+  // Only a HUMAN reply ticks the answer steps — the thread is pre-seeded with
+  // the agent's question, so any-message would look pre-answered.
+  const answered = state.messages.some((m) => m.author === "human");
   const revised = state.plans.length > 1;
   const decided =
     state.decisions.length > 0 || state.status === "approved" || state.status === "declined";
